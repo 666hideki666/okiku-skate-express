@@ -1,5 +1,7 @@
 # オキク スケート配達便
 
+ブラウザで遊ぶ: https://666hideki666.github.io/okiku-skate-express/
+
 初回ブラウザ版。`index.html`、`style.css`、`game.js` と同じ場所に `Concept Art/` を置いてください。
 
 ```sh
