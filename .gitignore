@@ -1,0 +1,9 @@
+# Public repository: stage only the runtime artwork and music referenced by the game.
+# New assets must be reviewed and added explicitly with `git add -f`.
+/*
+!/.gitignore
+!/.nojekyll
+!/README.md
+!/index.html
+!/style.css
+!/game.js
