@@ -1,5 +1,5 @@
-# Public repository: stage only the runtime artwork and music referenced by the game.
-# New assets must be reviewed and added explicitly with `git add -f`.
+# Public repository: include only the reviewed runtime artwork and music.
+# Comparison images, source documents, and local tests stay untracked.
 /*
 !/.gitignore
 !/.nojekyll
@@ -7,3 +7,40 @@
 !/index.html
 !/style.css
 !/game.js
+!/Christmas Concept Art/
+/Christmas Concept Art/*
+!/Christmas Concept Art/01_オキク_マフラー滑走基準案.png
+!/Christmas Concept Art/04_オキク_マフラー滑走はためき案.png
+!/Christmas Concept Art/05_オキク_マフラーオーリー01踏み込み案.png
+!/Christmas Concept Art/06_オキク_マフラーオーリー02浮き上がり案.png
+!/Christmas Concept Art/07_オキク_マフラーオーリー03頂点案.png
+!/Christmas Concept Art/08_オキク_マフラーオーリー03b降下案.png
+!/Christmas Concept Art/09_オキク_マフラーオーリー04着地案.png
+!/Christmas Concept Art/10_背景_モイモイのクッキー屋さん_冬案.png
+!/Christmas Concept Art/11_背景_住宅街_冬案_v2.png
+!/Christmas Concept Art/12_背景_公園入口_冬案_v2.png
+!/Christmas Concept Art/13_背景_公園沿い_冬案.png
+!/Christmas Concept Art/14_背景_公園出口_冬案.png
+!/Christmas Concept Art/15_背景_商店街_冬案.png
+!/Christmas Concept Art/16_背景_メイちゃんのお店手前_冬案_v3.png
+!/Christmas Concept Art/16_背景_メイちゃんのお店手前_冬案_v4_ループ用.png
+!/Christmas Concept Art/17_背景_メイちゃんのお店全景_冬案.png
+!/Christmas Concept Art/20_障害物_除雪後の雪塊_地上案.png
+!/Christmas Concept Art/21_障害物_シマエナガ_羽上げ_整列案.png
+!/Christmas Concept Art/22_障害物_シマエナガ_羽下げ_整列案.png
+!/Christmas Concept Art/24_オキク_マフラーしゃがみ01沈み込み案.png
+!/Christmas Concept Art/25_オキク_マフラーしゃがみ02低姿勢案.png
+!/Christmas Concept Art/26_オキク_マフラーしゃがみ03低姿勢はためき案.png
+!/Christmas Concept Art/27_オキク_マフラーしゃがみ04立ち上がり案.png
+!/Christmas Concept Art/28_オキク_マフラーよろめき案.png
+!/Christmas Concept Art/29_オキク_マフラー転倒途中クッキー飛散案.png
+!/Christmas Concept Art/30_オキク_マフラー転倒後座り込み案.png
+!/Christmas Concept Art/31_オープニング01_モイモイのお願い_冬案.png
+!/Christmas Concept Art/32_オープニング02_オキクの返事_冬案.png
+!/Christmas Concept Art/33_オープニング03_クッキー受け取り_冬案.png
+!/Christmas Concept Art/34_タイトル選択用_冬の街を滑るオキク案.png
+!/Christmas Concept Art/35_ゴール01_到着_冬案_v2.png
+!/Christmas Concept Art/36b_ゴール03_両者で箱を支える_冬案.png
+!/Christmas Concept Art/37_ゴール03_メイちゃん受け取り_冬案.png
+!/Christmas Concept Art/37b_ゴール04_受け取り後の挨拶_冬案.png
+!/Christmas Concept Art/39_障害物_雪のカラーコーン単体案.png

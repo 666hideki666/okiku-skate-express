@@ -59,13 +59,16 @@
   const bgm = document.getElementById("bgm");
   const bgmToggle = document.getElementById("bgm-toggle");
   const fullscreenToggle = document.getElementById("fullscreen-toggle");
+  const modeNormalButton = document.getElementById("mode-normal");
+  const modeChristmasButton = document.getElementById("mode-christmas");
+  const modeStatus = document.getElementById("mode-status");
   const BGM_VOLUME = .22;
   const BGM_FADE_SECONDS = .9;
   const BGM_LOOP_TAIL_SECONDS = 1;
   const BGM_QUIET_STATES = new Set(["crashing", "gameover", "endingTransition", "ending", "success"]);
   bgm.volume = BGM_VOLUME;
 
-  const art = {
+  const normalArt = {
     title: "Concept Art/タイトル画面,緑の街を滑るオキク案.png",
     story1: "Concept Art/オープニング01,モイモイのお願い_緑とボード修正案.png",
     story2: "Concept Art/オープニング02,オキクの返事_ボード位置統一案.png",
@@ -103,10 +106,52 @@
     pigeonUp: "Concept Art/障害物,ハト羽上げ案.png",
     pigeonDown: "Concept Art/障害物,ハト羽下げ案.png"
   };
-  const images = {};
+  const christmasArt = {
+    title: "Christmas Concept Art/34_タイトル選択用_冬の街を滑るオキク案.png",
+    story1: "Christmas Concept Art/31_オープニング01_モイモイのお願い_冬案.png",
+    story2: "Christmas Concept Art/32_オープニング02_オキクの返事_冬案.png",
+    story3: "Christmas Concept Art/33_オープニング03_クッキー受け取り_冬案.png",
+    start: "Christmas Concept Art/10_背景_モイモイのクッキー屋さん_冬案.png",
+    residential: "Christmas Concept Art/11_背景_住宅街_冬案_v2.png",
+    parkEntrance: "Christmas Concept Art/12_背景_公園入口_冬案_v2.png",
+    park: "Christmas Concept Art/13_背景_公園沿い_冬案.png",
+    parkExit: "Christmas Concept Art/14_背景_公園出口_冬案.png",
+    shopping: "Christmas Concept Art/15_背景_商店街_冬案.png",
+    nearGoalLoop: "Christmas Concept Art/16_背景_メイちゃんのお店手前_冬案_v4_ループ用.png",
+    nearGoalFinal: "Christmas Concept Art/16_背景_メイちゃんのお店手前_冬案_v3.png",
+    goal: "Christmas Concept Art/17_背景_メイちゃんのお店全景_冬案.png",
+    ending1: "Christmas Concept Art/35_ゴール01_到着_冬案_v2.png",
+    ending2: "Christmas Concept Art/36b_ゴール03_両者で箱を支える_冬案.png",
+    ending3: "Christmas Concept Art/37_ゴール03_メイちゃん受け取り_冬案.png",
+    ending4: "Christmas Concept Art/37b_ゴール04_受け取り後の挨拶_冬案.png",
+    ride: "Christmas Concept Art/01_オキク_マフラー滑走基準案.png",
+    flutter: "Christmas Concept Art/04_オキク_マフラー滑走はためき案.png",
+    jump1: "Christmas Concept Art/05_オキク_マフラーオーリー01踏み込み案.png",
+    jump2: "Christmas Concept Art/06_オキク_マフラーオーリー02浮き上がり案.png",
+    jump3: "Christmas Concept Art/07_オキク_マフラーオーリー03頂点案.png",
+    jump4: "Christmas Concept Art/08_オキク_マフラーオーリー03b降下案.png",
+    jump5: "Christmas Concept Art/09_オキク_マフラーオーリー04着地案.png",
+    duck1: "Christmas Concept Art/24_オキク_マフラーしゃがみ01沈み込み案.png",
+    duck2: "Christmas Concept Art/25_オキク_マフラーしゃがみ02低姿勢案.png",
+    duck3: "Christmas Concept Art/26_オキク_マフラーしゃがみ03低姿勢はためき案.png",
+    duck4: "Christmas Concept Art/27_オキク_マフラーしゃがみ04立ち上がり案.png",
+    stumble: "Christmas Concept Art/28_オキク_マフラーよろめき案.png",
+    fall: "Christmas Concept Art/29_オキク_マフラー転倒途中クッキー飛散案.png",
+    seated: "Christmas Concept Art/30_オキク_マフラー転倒後座り込み案.png",
+    rock: "Christmas Concept Art/20_障害物_除雪後の雪塊_地上案.png",
+    box: "Christmas Concept Art/39_障害物_雪のカラーコーン単体案.png",
+    pigeonUp: "Christmas Concept Art/21_障害物_シマエナガ_羽上げ_整列案.png",
+    pigeonDown: "Christmas Concept Art/22_障害物_シマエナガ_羽下げ_整列案.png"
+  };
+  const imageSets = { normal: {}, christmas: null };
+  let images = imageSets.normal;
+  let mode = "normal";
   const route = ["residential", "parkEntrance", "park", "parkExit", "shopping", "nearGoal"];
-  const backgrounds = ["start", ...route, ...route, "goal"];
-  const backgroundSpeed = PANEL_STEP * (backgrounds.length - 1) / END_DISTANCE;
+  const normalBackgrounds = ["start", ...route, ...route, "goal"];
+  const christmasRoute = ["residential", "parkEntrance", "park", "parkExit", "shopping"];
+  const christmasBackgrounds = ["start", ...christmasRoute, "nearGoalLoop", ...christmasRoute, "nearGoalFinal", "goal"];
+  let backgrounds = normalBackgrounds;
+  const backgroundSpeed = PANEL_STEP * (normalBackgrounds.length - 1) / END_DISTANCE;
   const obstaclePlan = [
     [1500, "rock"], [2400, "pigeon"], [3300, "box"],
     [4200, "rock"], [5100, "pigeon"], [6000, "box"],
@@ -153,10 +198,50 @@
   let endingPanelAge = 0;
   let lastFrame = performance.now();
   let keyboardDuck = false;
+  let snowAge = 0;
   const pointerZones = new Map();
   let obstacles = [];
 
   const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
+
+  function loadArt(manifest) {
+    const loaded = {};
+    return Promise.all(Object.entries(manifest).map(([key, path]) => new Promise((resolve, reject) => {
+      const im = new Image();
+      im.onload = () => { loaded[key] = im; resolve(); };
+      im.onerror = () => reject(new Error(`画像を読み込めません: ${path}`));
+      im.src = encodeURI(path);
+    }))).then(() => loaded);
+  }
+
+  function applyMode(nextMode) {
+    mode = nextMode;
+    images = imageSets[mode];
+    backgrounds = mode === "christmas" ? christmasBackgrounds : normalBackgrounds;
+    gameShell.dataset.mode = mode;
+    modeNormalButton.setAttribute("aria-pressed", String(mode === "normal"));
+    modeChristmasButton.setAttribute("aria-pressed", String(mode === "christmas"));
+    modeStatus.textContent = "";
+  }
+
+  async function selectMode(nextMode) {
+    if (state !== "title" || nextMode === mode) return;
+    if (nextMode === "christmas" && !imageSets.christmas) {
+      loading.textContent = "クリスマスの街を準備中…";
+      loading.classList.remove("hidden");
+      try {
+        const winterImages = await loadArt(christmasArt);
+        imageSets.christmas = { ...imageSets.normal, ...winterImages };
+      } catch {
+        modeStatus.textContent = "冬の画像を読み込めませんでした。通常版をお試しください。";
+        loading.classList.add("hidden");
+        return;
+      }
+      loading.classList.add("hidden");
+    }
+    applyMode(nextMode);
+    lastFrame = performance.now();
+  }
 
   function renderBgmToggle() {
     const playing = bgmEnabled && (!bgm.paused || resumeBgmWhenVisible || BGM_QUIET_STATES.has(state));
@@ -296,6 +381,7 @@
     endingAge = 0;
     endingPanelAge = 0;
     keyboardDuck = false;
+    snowAge = 0;
     pointerZones.clear();
     obstacles = obstaclePlan.map(([worldX, type]) => ({ worldX, type, resolved: false }));
     state = "playing";
@@ -476,7 +562,9 @@
     for (const obstacle of obstacles) {
       if (obstacle.resolved) continue;
       const x = obstacleScreenX(obstacle);
-      const halfWidth = obstacle.type === "pigeon" ? 62 : obstacle.type === "box" ? 37 : 43;
+      const halfWidth = mode === "christmas"
+        ? (obstacle.type === "pigeon" ? 70 : obstacle.type === "box" ? 34 : 46)
+        : (obstacle.type === "pigeon" ? 62 : obstacle.type === "box" ? 37 : 43);
       const left = (obstacle.type === "pigeon" ? 250 : 285) + jumpOffset;
       const right = (obstacle.type === "pigeon" ? 430 : 375) + jumpOffset;
       if (x + halfWidth < left) {
@@ -486,7 +574,7 @@
       if (x - halfWidth > right) continue;
       const avoided = obstacle.type === "pigeon"
         ? duckHeld && !isJumping()
-        : jumpLift() >= (obstacle.type === "box" ? 70 : 38);
+        : jumpLift() >= (obstacle.type === "box" ? (mode === "christmas" ? 78 : 70) : 38);
       if (avoided) continue;
       obstacle.resolved = true;
       if (immuneAge < invulnerability) continue;
@@ -585,9 +673,40 @@
     ctx.globalAlpha = 1;
   }
 
+  function drawSnowfall() {
+    if (mode !== "christmas") return;
+    ctx.save();
+    for (let i = 0; i < 26; i++) {
+      const drift = snowAge * (7 + i % 5 * 2);
+      const x = (i * 173 + Math.sin(i * 9.7) * 43 + drift + W * 4) % W;
+      const y = (i * 107 + snowAge * (16 + i % 4 * 5)) % 515;
+      ctx.globalAlpha = .24 + i % 4 * .055;
+      ctx.fillStyle = i % 3 === 0 ? "#d9edfa" : "#ffffff";
+      ctx.beginPath();
+      ctx.arc(x, y, i % 5 === 0 ? 2.2 : 1.4, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.restore();
+  }
+
   function drawObstacle(o) {
     const x = obstacleScreenX(o);
     if (x < -160 || x > W + 160) return;
+    if (mode === "christmas") {
+      if (o.type === "rock") {
+        drawImage("rock", 254, 323, 1264, 366, x - 46, GROUND_Y - 35, 92, 35);
+      } else if (o.type === "box") {
+        drawImage("box", 172, 90, 900, 1118, x - 34, GROUND_Y - 84, 68, 84);
+      } else {
+        const up = Math.floor(elapsed * 7) % 2 === 0;
+        ctx.save();
+        ctx.shadowColor = "#17343c9c";
+        ctx.shadowBlur = 9;
+        drawImage(up ? "pigeonUp" : "pigeonDown", 0, 0, 1536, 1536, x - 70, 272, 140, 140);
+        ctx.restore();
+      }
+      return;
+    }
     if (o.type === "rock") {
       drawImage("rock", 326, 325, 1245, 385, x - 43, GROUND_Y - 33, 86, 33);
     } else if (o.type === "box") {
@@ -752,6 +871,7 @@
     canvas.dataset.distance = String(Math.floor(distance));
     canvas.dataset.collisions = String(collisions);
     canvas.dataset.state = state;
+    canvas.dataset.mode = mode;
     canvas.dataset.storyIndex = state === "story" ? String(storyIndex) : "";
     canvas.dataset.endingIndex = state === "ending" || state === "success" ? String(endingIndex) : "";
     canvas.dataset.cookiesActive = String(crashCookies.filter(cookie => cookie.age >= 0).length);
@@ -768,12 +888,14 @@
     }
     if (state === "endingTransition") {
       drawBackground();
+      drawSnowfall();
       drawCharacter();
       ctx.fillStyle = `rgba(23, 45, 53, ${clamp(endingAge / .36, 0, 1)})`;
       ctx.fillRect(0, 0, W, H);
       return;
     }
     drawBackground();
+    drawSnowfall();
     for (const obstacle of obstacles) if (obstacle.type !== "pigeon") drawObstacle(obstacle);
     if (state === "crashing" || state === "gameover") {
       drawCrashCookies(true);
@@ -788,6 +910,7 @@
   function frame(now) {
     const dt = Math.min(.05, (now - lastFrame) / 1000);
     lastFrame = now;
+    if (mode === "christmas" && state !== "title" && state !== "story") snowAge += dt;
     update(dt);
     updateBgm(dt);
     draw();
@@ -892,6 +1015,8 @@
     renderBgmToggle();
   });
   tryPlayBgm();
+  modeNormalButton.addEventListener("click", () => selectMode("normal"));
+  modeChristmasButton.addEventListener("click", () => selectMode("christmas"));
   startButton.addEventListener("click", () => {
     tryPlayBgm();
     showStory(0);
@@ -902,12 +1027,9 @@
   retryButton.addEventListener("click", reset);
   goalRetry.addEventListener("click", reset);
 
-  Promise.all(Object.entries(art).map(([key, path]) => new Promise((resolve, reject) => {
-    const im = new Image();
-    im.onload = () => { images[key] = im; resolve(); };
-    im.onerror = () => reject(new Error(`画像を読み込めません: ${path}`));
-    im.src = encodeURI(path);
-  }))).then(() => {
+  loadArt(normalArt).then(normalImages => {
+    imageSets.normal = normalImages;
+    applyMode("normal");
     loading.classList.add("hidden");
     bgmToggle.classList.remove("hidden");
     lastFrame = performance.now();

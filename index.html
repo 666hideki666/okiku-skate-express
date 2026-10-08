@@ -14,7 +14,14 @@
       <canvas id="game" width="1280" height="720" aria-label="スケート配達ゲーム。右側をタップでジャンプ、左側を押している間しゃがみます"></canvas>
       <div class="loading" id="loading">街とキャラクターを準備中…</div>
       <section class="title-screen" id="title-screen" aria-label="タイトル画面">
-        <h1>OKIKU<br />SKATE EXPRESS</h1>
+        <div class="title-heading">
+          <h1>OKIKU<br />SKATE EXPRESS</h1>
+          <div class="mode-picker" role="group" aria-label="プレイするモード">
+            <button id="mode-normal" type="button" aria-pressed="true">通常版</button>
+            <button id="mode-christmas" type="button" aria-pressed="false">❄ クリスマス版</button>
+          </div>
+          <p class="mode-status" id="mode-status" aria-live="polite"></p>
+        </div>
         <div class="title-actions">
           <button id="start" type="button">はじめる <span aria-hidden="true">→</span></button>
           <button class="fullscreen-toggle" id="fullscreen-toggle" type="button" aria-label="ゲームを全画面表示にする" aria-pressed="false">⛶ 全画面</button>

@@ -2,7 +2,7 @@
 
 ブラウザで遊ぶ: https://666hideki666.github.io/okiku-skate-express/
 
-初回ブラウザ版。`index.html`、`style.css`、`game.js` と同じ場所に `Concept Art/` を置いてください。
+タイトルで「通常版」と「クリスマス版」を選べます。`index.html`、`style.css`、`game.js` と同じ場所に `Concept Art/` と `Christmas Concept Art/` を置いてください。
 
 ```sh
 python3 -m http.server 8000

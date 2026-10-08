@@ -6,7 +6,15 @@ body { display: grid; place-items: center; background: #172d35; }
 canvas { display: block; width: 100%; height: 100%; touch-action: none; }
 .title-screen, .story-screen { position: absolute; inset: 0; color: #fff8e9; }
 .title-screen { display: flex; flex-direction: column; align-items: flex-start; justify-content: space-between; padding: 4% 5%; background: linear-gradient(90deg, #17343c9e, #17343c00 63%); pointer-events: none; }
-.title-screen h1 { max-width: 58%; margin: 0; color: #fff8e9; font: 900 clamp(26px, 4.8vw, 72px)/1.02 system-ui, sans-serif; letter-spacing: .025em; text-shadow: 0 4px 16px #17343caa; }
+.title-heading { width: 58%; }
+.title-screen h1 { margin: 0; color: #fff8e9; font: 900 clamp(26px, 4.8vw, 72px)/1.02 system-ui, sans-serif; letter-spacing: .025em; text-shadow: 0 4px 16px #17343caa; }
+.mode-picker { display: flex; width: min(100%, 455px); gap: clamp(8px, 1vw, 12px); margin-top: clamp(10px, 1.8vw, 24px); pointer-events: auto; }
+.mode-picker button { flex: 1; min-width: 0; min-height: 44px; padding: .48em .65em; border: 2px solid #fff9; color: #fff8e9; background: #17343cdd; box-shadow: 0 4px 0 #102a31; font-size: clamp(13px, 1.3vw, 18px); white-space: nowrap; }
+.mode-picker button[aria-pressed="true"] { border-color: #fff8e9; color: #17343c; background: #fff8e9; box-shadow: 0 4px 0 #c3bca9; }
+.mode-picker button[aria-pressed="true"]:hover { background: #fff; }
+.game-shell[data-mode="christmas"] .mode-picker button[aria-pressed="true"] { border-color: #dceeff; color: #17343c; background: #dceeff; box-shadow: 0 4px 0 #93b7c7; }
+.mode-status { margin: .4em 0 0; color: #fff8e9; font-size: clamp(11px, 1.1vw, 15px); font-weight: 800; text-shadow: 0 2px 6px #17343c; pointer-events: none; }
+.mode-status:empty { display: none; }
 .title-actions { display: flex; gap: clamp(10px, 1.4vw, 18px); width: min(72%, 640px); pointer-events: auto; }
 .title-actions button { flex: 1; width: auto; min-width: 0; pointer-events: auto; }
 .title-actions .fullscreen-toggle { border: 1px solid #fff9; color: #fff8e9; background: #17343cdd; box-shadow: 0 5px 0 #102a31; }
@@ -58,6 +66,8 @@ button:focus-visible { outline: 4px solid #193c43; outline-offset: 3px; }
 .result.failure { width: min(39%, 480px); }
 .result p:not(.eyebrow) { margin: .5em 0 1em; }
 @media (max-height: 460px) {
+  .mode-picker { margin-top: 8px; }
+  .mode-picker button { padding: .35em .45em; }
   .title-actions { width: min(72%, 540px); }
   .goal-caption { top: 3%; left: 3%; width: 39%; padding: 8px 12px; }
   .goal-dialogue { font-size: clamp(12px, 1.5vw, 17px); }
